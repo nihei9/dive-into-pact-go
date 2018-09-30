@@ -1,0 +1,94 @@
+{
+  "consumer": {
+    "name": "john"
+  },
+  "provider": {
+    "name": "recipes"
+  },
+  "interactions": [
+    {
+      "description": "A request to get a recipe",
+      "providerState": "Recipe exists",
+      "request": {
+        "method": "GET",
+        "path": "/v1/recipes/12345678",
+        "matchingRules": {
+          "$.path": {
+            "match": "regex",
+            "regex": "\\/v1\\/recipes\\/[0-9a-z]+"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "id": "12345678",
+          "ingredients": [
+            {
+              "name": "rice"
+            }
+          ],
+          "name": "Sushi"
+        },
+        "matchingRules": {
+          "$.headers.Content-Type": {
+            "match": "regex",
+            "regex": "application\\/json"
+          },
+          "$.body": {
+            "match": "type"
+          },
+          "$.body.id": {
+            "match": "type"
+          },
+          "$.body.ingredients": {
+            "min": 1
+          },
+          "$.body.ingredients[*].*": {
+            "match": "type"
+          },
+          "$.body.ingredients[*].name": {
+            "match": "type"
+          },
+          "$.body.name": {
+            "match": "type"
+          }
+        }
+      }
+    },
+    {
+      "description": "A request to get a recipe",
+      "providerState": "Recipe not found",
+      "request": {
+        "method": "GET",
+        "path": "/v1/recipes/99999999",
+        "matchingRules": {
+          "$.path": {
+            "match": "regex",
+            "regex": "\\/v1\\/recipes\\/[0-9a-z]+"
+          }
+        }
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.headers.Content-Type": {
+            "match": "regex",
+            "regex": "application\\/json"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
