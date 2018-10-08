@@ -28,7 +28,7 @@ func TestMain(m *testing.M) {
 		Provider:                 providerName,
 		LogDir:                   logDir,
 		PactDir:                  pactDir,
-		LogLevel:                 "DEBUG",
+		LogLevel:                 "INFO",
 		DisableToolValidityCheck: true,
 		PactFileWriteMode:        "overwrite",
 	}
