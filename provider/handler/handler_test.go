@@ -13,11 +13,12 @@ import (
 )
 
 const (
-	pactDir = "../../pacts"
-	logDir  = "../../logs"
-
-	consumer = "john"
-	provider = "recipes"
+	consumerName    = "cli"
+	providerName    = "recipes"
+	providerVersion = "1.0.0"
+	pactDir         = "../../pacts"
+	logDir          = "../../logs"
+	broker          = "http://localhost:80"
 )
 
 func TestProvider(t *testing.T) {
@@ -30,18 +31,26 @@ func TestProvider(t *testing.T) {
 	}()
 
 	pact := dsl.Pact{
-		Consumer: consumer,
-		Provider: provider,
+		Consumer: consumerName,
+		Provider: providerName,
 		LogDir:   logDir,
 		PactDir:  pactDir,
 	}
 
 	_, err := pact.VerifyProvider(t, types.VerifyRequest{
-		ProviderBaseURL:        fmt.Sprintf("http://localhost:%d", port),
-		PactURLs:               []string{fmt.Sprintf("%s/%s-%s.json", pactDir, consumer, provider)},
+		ProviderBaseURL: fmt.Sprintf("http://localhost:%d", port),
+		// PactURLs: []string{
+		// 	fmt.Sprintf("%s/%s-%s.json", pactDir, consumerName, providerName),
+		// },
 		ProviderStatesSetupURL: fmt.Sprintf("http://localhost:%d/setup", port),
+		BrokerURL:              broker,
+		Tags: []string{
+			providerName,
+			"latest",
+		},
+		PublishVerificationResults: true,
+		ProviderVersion:            providerVersion,
 	})
-
 	if err != nil {
 		t.Fatal(err)
 	}

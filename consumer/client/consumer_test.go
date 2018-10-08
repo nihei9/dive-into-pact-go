@@ -1,24 +1,31 @@
 package client
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"testing"
 
 	"github.com/pact-foundation/pact-go/dsl"
+	"github.com/pact-foundation/pact-go/types"
 )
 
 const (
-	pactDir = "../../pacts"
-	logDir  = "../../logs"
+	consumerName    = "cli"
+	consumerVersion = "1.0.0"
+	providerName    = "recipes"
+	pactDir         = "../../pacts"
+	logDir          = "../../logs"
+	broker          = "http://localhost:80"
 )
 
 var pact dsl.Pact
 
 func TestMain(m *testing.M) {
 	pact = dsl.Pact{
-		Consumer:                 "john",
-		Provider:                 "recipes",
+		Consumer:                 consumerName,
+		Provider:                 providerName,
 		LogDir:                   logDir,
 		PactDir:                  pactDir,
 		LogLevel:                 "DEBUG",
@@ -30,6 +37,21 @@ func TestMain(m *testing.M) {
 
 	pact.WritePact()
 	pact.Teardown()
+
+	publisher := dsl.Publisher{}
+	err := publisher.Publish(types.PublishRequest{
+		PactBroker: broker,
+		PactURLs: []string{
+			fmt.Sprintf("%s/%s-%s.json", pactDir, consumerName, providerName),
+		},
+		ConsumerVersion: consumerVersion,
+		Tags: []string{
+			providerName,
+		},
+	})
+	if err != nil {
+		log.Println("ERROR: ", err)
+	}
 
 	os.Exit(exitCode)
 }

@@ -8,7 +8,7 @@ Dive into pact-go
 
 ```sh
 $ cd consumer
-$ go build -o consumer cmd/consumer/main.go
+$ go build -o consumer cmd/recipes/main.go
 $ ./consumer
 ```
 
@@ -21,7 +21,7 @@ Options
 
 ```sh
 $ cd provider
-$ go build -o provider cmd/provider/main.go
+$ go build -o provider cmd/recipes/main.go
 $ ./provider
 ```
 

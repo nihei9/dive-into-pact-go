@@ -1,6 +1,6 @@
 {
   "consumer": {
-    "name": "john"
+    "name": "cli"
   },
   "provider": {
     "name": "recipes"
