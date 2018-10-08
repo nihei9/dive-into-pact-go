@@ -34,6 +34,7 @@ func TestProvider(t *testing.T) {
 		Consumer: consumerName,
 		Provider: providerName,
 		LogDir:   logDir,
+		LogLevel: "DEBUG",
 		PactDir:  pactDir,
 	}
 
